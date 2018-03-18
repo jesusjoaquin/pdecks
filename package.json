@@ -1,18 +1,23 @@
 {
-  "name": "pdeck",
+  "name": "pdecks",
   "version": "1.0.0",
-  "description": "A pdeck MVP",
+  "description": "Beautiful application to enhance the workflow experience.",
   "main": "main.js",
   "scripts": {
     "start": "electron ."
   },
-  "repository": "https://github.com/jesusjoaquin/pdecks",
-  "keywords": [
-    "Electron"
-  ],
-  "author": "Jesus Garcia, Chadd Yuan",
-  "license": "CC0-1.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jesusjoaquin/pdecks.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jesusjoaquin/pdecks/issues"
+  },
+  "homepage": "https://github.com/jesusjoaquin/pdecks#readme",
   "devDependencies": {
-    "electron": "1.8.3"
+    "electron": "1.8.4"
   }
 }
