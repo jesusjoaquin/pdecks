@@ -19,5 +19,8 @@
   "homepage": "https://github.com/jesusjoaquin/pdecks#readme",
   "devDependencies": {
     "electron": "1.8.4"
+  },
+  "dependencies": {
+    "pg": "^7.4.1"
   }
 }
