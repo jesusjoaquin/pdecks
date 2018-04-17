@@ -3,12 +3,29 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../assets/css/add.css">
     <title>Create a Deck</title>
   </head>
   <body>
     <p>What would you like the name of your deck to be?</p>
-    <input id="deckname"></input>
-    <button id="createBtn">Create!</button>
+    <div>
+      <form>
+        <label for="dname">Deck Name</label>
+        <input type="text" id="dname" name="deckname" placeholder="What will you call your deck?">
+
+        <label for="tab"></label>
+        <input type="text" class="tab" name="tab" placeholder="Tab">
+
+        <a>Additional Tab</a>
+
+        <label for="app"></label>
+        <input type="text" class="app" name="app" placeholder="Application">
+
+        <a>Additional Application</a>
+
+        <input type="submit" value="Submit">
+      </form>
+    </div>
     <script src="add.js"></script>
   </body>
 </html>

@@ -1,4 +1,5 @@
 const electron = require("electron")
+const {shell} = require("electron")
 const path = require("path")
 const BrowserWindow = electron.remote.BrowserWindow
 const { Pool, Client } = require('pg')
@@ -8,6 +9,20 @@ const pool = new Pool ({
   database: 'sample_db',
   port: 5432,
 })
+
+window.onload = function () {
+  populate_decks()
+}
+
+function openNav() {
+  document.getElementById("mySidenav").style.width = "250px"
+  document.getElementById("main").style.marginLeft = "250px"
+}
+
+function closeNav() {
+  document.getElementById("mySidenav").style.width = "0"
+  document.getElementById("main").style.marginLeft = "0"
+}
 
 // This function creates the database if it does not exist. 
 function create_database()
@@ -43,23 +58,11 @@ function retieve_name() {
   })
 }
 
-// Returns the highest id in the databse
-function count_presets()
-{
-  console.log("In largest value.")
-  pool.query('SELECT max(id) FROM presets', (err, res) => {
-    if (err) {
-      console.log(err.stack)
-    } else {
-      return res.rows[0].max
-    }
-  })
-}
-
-function save_url()
+// This will save a specific preset with the given id and url
+function save_url(id, url)
 {
   var text = 'INSERT INTO presets (id, url) VALUES ($1, $2)'
-  var values = [1, 'www.pdecks.com']
+  var values = [id, url]
   pool.query(text, values, (err, res) => {
     if (err) {
       console.log(err.stack)
@@ -69,26 +72,104 @@ function save_url()
   })
 }
 
-function create_presets(data)
+
+// I need this function to run when window has loaded *IMPORTANT*
+// With an array of all entries of an id, it creates the deck
+function render_preset(data, preset_num)
+{
+  console.log(data)
+
+  var curr_text = ''
+  var inner_text = "<h2>" + data[0].name  + "</><h4 class='deck-title'>Tabs:</h4>"
+  var div = document.createElement("div")
+  div.className = 'deck'
+
+  for (i = 0; i < data.length; i++)
+  {
+    curr_text = "<div class='card tab" + preset_num + "'>" + data[i].url + "</div>"
+    console.log(curr_text)
+    inner_text += curr_text
+  }
+
+  inner_text += "<h4 class='deck-title'>Applications:</h4>"
+  for (i = 0; i < data.length; i++)
+  {
+    curr_text = "<div class='card app" + preset_num + "'>" + data[i].application + "</div>"
+    inner_text += curr_text
+  } 
+
+  div.innerHTML = inner_text
+  
+  div.addEventListener('click', function(event) {
+    var links = document.getElementsByClassName('tab' + preset_num)
+    var apps = document.getElementsByClassName('app' + preset_num)
+    
+    for (i = 0; i < links.length; i++)
+    { 
+      shell.openExternal(links[i].innerHTML)
+    }
+
+    for (i = 0; i < apps.length; i++)
+    {
+      shell.openItem('/Applications/' + apps[i].innerHTML + '.app')
+    }
+  }) 
+ 
+  document.getElementById('deck-holder').appendChild(div);
+
+}
+
+// Gets all the entries of the specified preset_num
+// NOTE: currently out of order, I assume it's due to asynchronousness.
+function retrieve_preset(preset_num)
+{
+    var text = 'SELECT * FROM presets WHERE id = $1'
+    var values = [preset_num]
+    pool.query(text, values, (err, res) => {
+      if (err) {
+        console.log("ERROR: cannot get elements of specified id: " + values[0])
+      } else {
+        render_preset(res.rows, preset_num)
+      }
+    })
+}
+
+// Given the data from the database, create the presets.
+function create_presets(num_presets)
 {
   console.log("Generating Presets. . .")
-  var num_presets = count_presets()
-  console.log(num_presets)
+  console.log("Number of presets: " + num_presets)
+  var presets = new Array(num_presets)  
   for (i = 0; i < num_presets; i++)
   {
-    console.log("In the for loop. . .")
+    retrieve_preset(i + 1)
   }
+}
+
+
+// Returns the highest id in the databse
+function begin_creation(fn)
+{
+  // The purpose of this query is to find the number of presets.
+  pool.query('SELECT max(id) FROM presets', (err, res) => {
+    if (err) {
+      console.log(err.stack)
+    } else {
+      var max = res.rows[0].max
+      fn(max)
+    }
+  })
 }
 
 function process_data(data)
 {
   console.log("Processing Data. . .")
-  console.log(data)
   if (data.length != 0) {
-    create_presets(data)
+    begin_creation(create_presets)
   }
 }
 
+// Retieve all of the saved decks from the data base and create presets
 function populate_decks() 
 {	
   var brand_new = false  
@@ -109,7 +190,6 @@ function populate_decks()
   
   if (brand_new == true) {
     populate_decks()
-    console.log("populate_decks has been called a second time.");
   }
 }
 
@@ -120,7 +200,6 @@ addBtn.addEventListener('click', function(event) {
   let win = new BrowserWindow({ width: 400, height: 200})
   win.on('close', function() { win = null })
   win.loadURL(modalPath)
-  populate_decks()
-  save_url()
   win.show()
 })
+

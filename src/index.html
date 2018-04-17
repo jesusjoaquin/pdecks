@@ -6,11 +6,22 @@
     <link rel="stylesheet" href="../assets/css/main.css">
   </head>
   <body>
-    <h3>Productivity at its finest.</h3>
-    <div class="container">
-	This is the div which will contain all of the decks that a current user has.
+    <div id="mySidenav" class="sidenav">
+      <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+      <a href="#">View Contents</a>
+      <a href="#">Add Deck</a>
+      <a href="#">Delete Deck</a>
+    </div> 
+    <span onclick="openNav()">Open Sesh</span>
+    <div id="main">
+      <h1>pdecks</h1>
+      <div class="container">
+        <h3>Productivity at its finest.</h3>
+        <button id="addBtn">+</button>
+      </div>
+      <div id="deck-holder" class="container">
+      </div>
     </div>
-    <button id="addBtn">+</button>
     <script src="index.js"></script>
   </body>
-  </html>
+</html>
