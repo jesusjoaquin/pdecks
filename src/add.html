@@ -7,25 +7,35 @@
     <title>Create a Deck</title>
   </head>
   <body>
-    <p>What would you like the name of your deck to be?</p>
     <div>
       <form>
-        <label for="dname">Deck Name</label>
-        <input type="text" id="dname" name="deckname" placeholder="What will you call your deck?">
+        <label for="dname">Create/edit deck</label>
+        <input type="text" id="dname" name="deckname" placeholder="Deck to create or edit">
 
         <label for="tab"></label>
-        <input type="text" class="tab" name="tab" placeholder="Tab">
+        <input type="text" class="tab" name="tab" placeholder="Tab(s) to open">
 
-        <a>Additional Tab</a>
+        <span class="addy">
+          <a onclick="add_tab()">Additional Tab</a>
+        </span>
 
         <label for="app"></label>
-        <input type="text" class="app" name="app" placeholder="Application">
+        <input type="text" class="app" name="app" placeholder="Application(s) to open">
 
-        <a>Additional Application</a>
-
-        <input type="submit" value="Submit">
+        <span class="addy">
+          <a onclick="add_app()">Additional Application</a>
+        </span>
+ 
+        <input id="submit" type="submit" value="Submit">
       </form>
     </div>
-    <script src="add.js"></script>
+  <script src="./js/add.js"></script>
+<!--
+    <script>if (typeof module === 'object') {window.module = module; module = undefined;}</script>
+    <script>
+      require('js/add.js')
+    </script>
+    <script>if (window.module) module = window.module;</script>
+-->  
   </body>
 </html>

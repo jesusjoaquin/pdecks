@@ -17,6 +17,11 @@ const {app, BrowserWindow} = require('electron')
       protocol: 'file:',
       slashes: true
     }))
+    // Quit app when closed
+    win.on('close', function () {
+      app.quit()
+    })
+
 
     // Open the DevTools.
     win.webContents.openDevTools()

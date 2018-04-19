@@ -3,25 +3,40 @@
   <head>
     <meta charset="UTF-8">
     <title>pdecks</title>
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
     <link rel="stylesheet" href="../assets/css/main.css">
   </head>
   <body>
     <div id="mySidenav" class="sidenav">
       <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-      <a href="#">View Contents</a>
-      <a href="#">Add Deck</a>
-      <a href="#">Delete Deck</a>
+      <a id="content-toggler">View Contents</a>
+      <a>Add Deck</a>
+      <a>Delete Deck</a>
     </div> 
-    <span onclick="openNav()">Open Sesh</span>
+    <div class="header">
+      <div id="nav-icon" onclick="openNav()">
+        <img src="../assets/icons/png/hamburger.png" alt="nav">
+      </div>
+<!--
+      <div id="night-mode">
+        <label class="switch">
+          <input type="checkbox">
+          <span class="slider round"></span>
+        </label>
+      </div>
+-->   
+ </div>
+
     <div id="main">
       <h1>pdecks</h1>
-      <div class="container">
-        <h3>Productivity at its finest.</h3>
-        <button id="addBtn">+</button>
+      <div class="round-button">
+        <a id="addBtn">
+          <img src="../assets/icons/png/plus.png" alt="addition">
+        </a>
       </div>
       <div id="deck-holder" class="container">
       </div>
     </div>
-    <script src="index.js"></script>
+    <script src="./js/index.js"></script>
   </body>
 </html>

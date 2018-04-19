@@ -1,5 +1,6 @@
 body {
-  background-color: #7a7777;
+  background-color: #ffffff;
+  font-family: 'Open Sans', sans-serif;
 }
 
 .sidenav {
@@ -9,7 +10,7 @@ body {
   z-index: 1;
   top: 0;
   left: 0;
-  background-color: #111;
+  background-color: #bcbcbc;
   overflow-x: hidden;
   padding-top: 60px;
   transition: 0.5s;
@@ -22,6 +23,7 @@ body {
   color: #818181;
   display: block;
   transition: 0.3s;
+  white-space: nowrap;
 }
 
 .sidenav a:hover {
@@ -36,7 +38,33 @@ body {
   margin-left: 50px;
 }
 
+.round-button {
+  float: right;
+  width: 10%;
+  height: 0;
+  padding-bottom: 10%;
+  border-radius: 50%;
+  border: 1px solid #d3d3d3;
+  overflow: hidden;
+  background: #e1e1e1;
+  box-shadow: 0.5px 0.5px 0.5px 0.5px rgba(0, 0, 0, 0.5);
+  transition: box-shadow 0.1s ease-in-out;
+}
+
+.round-button:hover {
+  background: #d1d1d1;
+  box-shadow: 0.1 0.1 0.1 0.1 rgba(0, 0, 0, 0.5);
+}
+
+.round-button img {
+  display: block;
+  width: 76%;
+  padding: 12%;
+  height: auto;
+}
+
 .container {
+  padding-top: 15%;
   display: flex;
   flex-direction: row;
   flex-wrap: wrap-reverse;
@@ -48,11 +76,12 @@ body {
   flex-direction: column;
   width: 25%;
   margin-bottom: 5%;
-  background: #e1e1e1;
+  background: #84e0ff;
   padding: 10px;
+  border-radius: 4%;
   -moz-box-shadow: 0 0 8px 0 black;
   -webkit-box-shadow: 0 0 8px 0 black;
-  box-shadow: 3px 9px 18px #888888;
+  box-shadow: 0px 0px 0px #888888;
   transition: box-shadow 0.3s ease-in-out;
 }
 
@@ -64,6 +93,28 @@ body {
 
 .deck-title {
   color: blue;
+}
+
+#nav-icon {
+  margin-top: 0px;
+  width: 30px;
+  height: 30px;
+  background: #e1e1e1;
+  border-radius: 10%;
+  border: 1px solid #d3d3d3;
+  box-sizing: border-box;
+  box-shadow: 0.2px 0.2px 0.2px 0.2px rgba(0, 0, 0, 0.5);
+  transition: box-shadow 0.1s ease-in-out;
+}
+
+#nav-icon:hover {
+  background: #d1d1d1;
+  box-shadow: 0.1 0.1 0.1 0.1 rgba(0, 0, 0, 0.5);
+}
+
+#nav-icon img {
+  width: 100%;
+  height: 100%;
 }
 
 #main {

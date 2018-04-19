@@ -21,3 +21,17 @@ input[type=submit]:hover {
   background-color: #45a049;
 }
 
+span {
+  width: 100%;
+  display: inline-block;
+}
+
+span.addy {
+  text-align: right;
+}
+
+.addy {
+  color: #598fdb;
+  text-decoration: underline;
+  font-size: 10px;
+}
