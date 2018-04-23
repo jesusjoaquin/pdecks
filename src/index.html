@@ -8,27 +8,25 @@
   </head>
   <body>
     <div id="mySidenav" class="sidenav">
-      <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-      <a id="content-toggler">View Contents</a>
-      <a>Add Deck</a>
-      <a>Delete Deck</a>
+      <a href="javascript:void(0)" class="closebtn option" onclick="closeNav()">&times;</a>
+      <a id="content-toggler" class="option">View Contents</a>
+      <a id="add-deck" class="option">Add Deck</a>
+      <a id="deleter" class="option">Delete Deck</a>
     </div> 
-    <div class="header">
+    <div class="header flex-header">
       <div id="nav-icon" onclick="openNav()">
         <img src="../assets/icons/png/hamburger.png" alt="nav">
       </div>
-<!--
       <div id="night-mode">
-        <label class="switch">
+        <label id="night-switch" class="switch">
           <input type="checkbox">
           <span class="slider round"></span>
         </label>
       </div>
--->   
  </div>
 
     <div id="main">
-      <h1>pdecks</h1>
+      <h1 class="app-name">pdecks</h1>
       <div class="round-button">
         <a id="addBtn">
           <img src="../assets/icons/png/plus.png" alt="addition">

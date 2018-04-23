@@ -1,7 +1,8 @@
 const {app, BrowserWindow} = require('electron')
-  const path = require('path')
-  const url = require('url')
+const path = require('path')
+const url = require('url')
   //const Menu = require('electron').Menu;
+const { ipcMain } = require('electron')
 
   // Keep a global reference of the window object, if you don't, the window will
   // be closed automatically when the JavaScript object is garbage collected.
@@ -22,6 +23,9 @@ const {app, BrowserWindow} = require('electron')
       app.quit()
     })
 
+  ipcMain.on('refresh', function(event) {
+    win.webContents.send('refresh')
+  })
 
     // Open the DevTools.
     win.webContents.openDevTools()

@@ -1,3 +1,7 @@
+body {
+  font-family: 'Opens Sans', sans-serif;
+}
+
 input[type = text], select {
   width: 100%;
   padding: 12px 20px;
@@ -9,7 +13,7 @@ input[type = text], select {
 
 input[type = submit] {
   width: 100%;
-  background-color: #4caf50;
+  background-color: #6db1ff;
   color: white;
   padding: 14px 20px;
   margin: 8px 0;
@@ -18,7 +22,7 @@ input[type = submit] {
 } 
 
 input[type=submit]:hover {
-  background-color: #45a049;
+  background-color: #59a6ff;
 }
 
 span {

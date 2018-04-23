@@ -13,29 +13,26 @@
         <input type="text" id="dname" name="deckname" placeholder="Deck to create or edit">
 
         <label for="tab"></label>
-        <input type="text" class="tab" name="tab" placeholder="Tab(s) to open">
+        <div id="tabs2open">
+          <input type="text" class="tab" name="tab" placeholder="Tab(s) to open">
+        </div>
 
         <span class="addy">
           <a onclick="add_tab()">Additional Tab</a>
         </span>
 
         <label for="app"></label>
-        <input type="text" class="app" name="app" placeholder="Application(s) to open">
+        <div id="apps2open">
+          <input type="text" class="app" name="app" placeholder="Application(s) to open">
+        </div>
 
         <span class="addy">
           <a onclick="add_app()">Additional Application</a>
         </span>
- 
-        <input id="submit" type="submit" value="Submit">
+ <!-- Make this input tag of type="submit" -->
+        <input id="submit" type="submit"  value="Submit">
       </form>
     </div>
   <script src="./js/add.js"></script>
-<!--
-    <script>if (typeof module === 'object') {window.module = module; module = undefined;}</script>
-    <script>
-      require('js/add.js')
-    </script>
-    <script>if (window.module) module = window.module;</script>
--->  
   </body>
 </html>
