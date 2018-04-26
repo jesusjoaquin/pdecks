@@ -1,8 +1,15 @@
 const {app, BrowserWindow} = require('electron')
 const path = require('path')
 const url = require('url')
-  //const Menu = require('electron').Menu;
 const { ipcMain } = require('electron')
+const { Menu} = require('electron')
+
+require('electron-context-menu')({
+  prepend: (params, browserWindow) => [{
+    label: 'Rainbow',
+    visible: params. mediaType === 'image'
+  }]
+});
 
   // Keep a global reference of the window object, if you don't, the window will
   // be closed automatically when the JavaScript object is garbage collected.
@@ -28,7 +35,7 @@ const { ipcMain } = require('electron')
   })
 
     // Open the DevTools.
-    win.webContents.openDevTools()
+    // win.webContents.openDevTools()
 
     // Emitted when the window is closed.
     win.on('closed', () => {

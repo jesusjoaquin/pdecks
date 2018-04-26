@@ -4,6 +4,8 @@ const path = require("path")
 const BrowserWindow = electron.remote.BrowserWindow
 const { Pool, Client } = require('pg')
 const { ipcRenderer } = require('electron')
+const {remote} = require('electron')
+const { Menu } = remote
 
 const pool = new Pool ({ 
   host: 'localhost',
@@ -30,7 +32,7 @@ function create_add_window() {
   let win = new BrowserWindow({ width: 400, height: 300})
   win.on('close', function() { win = null })
   win.loadURL(modalPath)
-  win.webContents.openDevTools()
+  //win.webContents.openDevTools()
   win.show()
 }
 
