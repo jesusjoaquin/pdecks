@@ -1,2 +1,2 @@
 # pdecks
-App that opens stuff
+Desktop app that opens stuff
