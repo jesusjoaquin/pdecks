@@ -1,2 +1,2 @@
 # pdecks
-Beautiful application to enhance the workflow experience.
+App that opens stuff
