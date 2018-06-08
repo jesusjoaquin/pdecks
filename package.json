@@ -8,14 +8,15 @@
     "postinstall": "install-app-deps",
     "start": "electron .",
     "pack": "build --dir",
-    "dist": "build"
+    "dist": "build",
+    "rebuild": "electron-rebuild -f -w sqlite3"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/jesusjoaquin/pdecks.git"
   },
   "keywords": [],
-  "author": "",
+  "author": "Jesus Garcia",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/jesusjoaquin/pdecks/issues"
@@ -50,11 +51,13 @@
   },
   "devDependencies": {
     "electron": "1.8.4",
-    "electron-builder": "^20.10.0",
-    "electron-packager": "^12.0.1"
+    "electron-builder": "^20.15.3",
+    "electron-packager": "^12.1.0",
+    "electron-rebuild": "^1.7.3"
   },
   "dependencies": {
     "electron-context-menu": "^0.9.1",
-    "pg": "^7.4.1"
+    "pg": "^7.4.3",
+    "sqlite3": "^4.0.0"
   }
 }
