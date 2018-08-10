@@ -8,7 +8,21 @@ input[type = text], select {
   margin: 8px 0;
   display: inline-block;
   border: 1px solid #ccc;
-  box-sizing: border-box; 
+  box-sizing: border-box;
+}
+
+#submit {
+  width: 100%;
+  background-color: #6db1ff;
+  color: white;
+  padding: 14px 20px;
+  margin: 8px 0;
+  border: none;
+  cursor: pointer;
+}
+
+#submit:hover {
+  background-color: #59a6ff;
 }
 
 input[type = submit] {
@@ -19,7 +33,7 @@ input[type = submit] {
   margin: 8px 0;
   border: none;
   cursor: pointer;
-} 
+}
 
 input[type=submit]:hover {
   background-color: #59a6ff;

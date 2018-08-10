@@ -7,27 +7,13 @@ const BrowserWindow = electron.remote.BrowserWindow
 // Below enables the function 'verifyValue' in add.js.
 addjsDebugger();
 
-
-
 ipcRenderer.send("mainWindow");
-
-ipcRenderer.on('maxVal', (err, maxVal) => {
-  console.log(maxVal);
-  if (maxVal == null) {
-    console.log(1);
-  }
-});
 
 /*
 window.onload = function () {
   populate_decks()
 }
 */
-
-ipcRenderer.on('id-status', (err, idStatus) => {
-  console.log("Recieved idStatus:")
-  console.log(idStatus)
-});
 
 function openNav() {
   document.getElementById("mySidenav").style.width = "250px"
@@ -39,16 +25,16 @@ function closeNav() {
   document.getElementById("main").style.marginLeft = "0"
 }
 
-function create_add_window() {
+function createAddWindow() {
   const modalPath = path.join('file://', __dirname, 'add.html')
-  let win = new BrowserWindow({ width: 400, height: 300})
+  var win = new BrowserWindow({ width: 400, height: 300})
   win.on('close', function() { win = null })
   win.loadURL(modalPath)
   win.webContents.openDevTools()
   win.show()
 }
 
-function clear_decks()
+function clearDecks()
 {
   var deck_bin = document.getElementById('deck-holder')
   while (deck_bin.firstChild) {
@@ -91,7 +77,7 @@ content.addEventListener('click', function(event) {
 
 const add_deck = document.getElementById('add-deck')
 add_deck.addEventListener('click', function () {
-  create_add_window()
+  createAddWindow();
 })
 
 const night = document.querySelector('input[type="checkbox"]')
@@ -120,35 +106,35 @@ night.addEventListener('change', function(event) {
   }
 })
 
-function hide_contents()
+// Will hide all of the information about the tabs/apps a particular
+// deck opens.
+function hideContents()
 {
   var card = document.getElementsByClassName('card')
   var title = document.getElementsByClassName('deck-title')
 
-  for (i = 0; i < card.length; i++)
-  {
-    card[i].style.display = "none"
+  for (i = 0; i < card.length; i++) {
+    card[i].style.display = "none";
   }
 
-  for (i = 0; i < title.length; i++)
-  {
-    title[i].style.display = "none"
+  for (i = 0; i < title.length; i++) {
+    title[i].style.display = "none";
   }
 }
 
 // I need this function to run when window has loaded *IMPORTANT*
 // With an array of all entries of an id, it creates the deck
-function render_preset(data, startIndex, numItems)
+function renderPreset(data, startIndex, numItems)
 {
   var curr_text = ''
-  var inner_text = "<h2>" + data[0].name  + "</><h4 class='deck-title'>Tabs:</h4>"
+  var inner_text = "<h2>" + data[startIndex].name  + "</><h4 class='deck-title'>Tabs:</h4>"
   var div = document.createElement("div")
   div.className = 'deck'
 
   for (i = startIndex; i < numItems; i++) {
     if (data[i].url != null) {
-      curr_text = "<div class='card tab" + data[i].id + "'>" + data[i].url + "</div>"
-      inner_text += curr_text
+      curr_text = "<div class='card tab" + data[i].id + "'>" + data[i].url + "</div>";
+      inner_text += curr_text;
     }
   }
 
@@ -165,26 +151,24 @@ function render_preset(data, startIndex, numItems)
     var links = document.getElementsByClassName('tab' + data[i].id)
     var apps = document.getElementsByClassName('app' + data[i].id)
 
-    for (i = 0; i < links.length; i++)
-    {
-      shell.openExternal(links[i].innerHTML)
+    for (i = 0; i < links.length; i++) {
+      shell.openExternal(links[i].innerHTML);
     }
 
-    for (i = 0; i < apps.length; i++)
-    {
-      shell.openItem('/Applications/' + apps[i].innerHTML + '.app')
+    for (i = 0; i < apps.length; i++) {
+      shell.openItem('/Applications/' + apps[i].innerHTML + '.app');
     }
   })
 
   document.getElementById('deck-holder').appendChild(div);
 
-  hide_contents()
+  hideContents();
 }
 
 // Creates an array containing only unique values and returns the length.
 function countDecks(data) {
   // Compare the id of each entry and search for a duplicate id.
-  let uniques = data.filter( (value, index, self) =>
+  var uniques = data.filter( (value, index, self) =>
     index === self.findIndex((v) => (
       v.id === value.id
     ))
@@ -193,22 +177,26 @@ function countDecks(data) {
 }
 
 // Must process groups of rows at a time.
-function process_data(data)
+function processData(data)
 {
-  let sortedData, numDecks, itemIndex, numItems;
+  var sortedData, numDecks, itemIndex, numItems;
   sortedData = data.sort(function (a, b) { return a.id - b.id });
+
+  console.log(sortedData);
 
   // Must figure out the number of decks ignoring the duplicate id's.
   numDecks = countDecks(data);
+  console.log("The number of decks are:");
+  console.log(numDecks);
   itemIndex = 0;
   numItems = 0;
 
   if (numDecks == 1) {
-    render_preset(sortedData, 0, sortedData.length);
+    renderPreset(sortedData, 0, sortedData.length);
   } else {
-    for (let i = 0; i < numDecks; ++i)
+    for (var i = 0; i < numDecks; ++i)
     {
-      let startIndex, currNum;
+      var startIndex, currNum;
       startIndex = itemIndex;
       currNum = sortedData[itemIndex].id;
 
@@ -220,27 +208,15 @@ function process_data(data)
           break;
         }
       }
-      render_preset(sortedData, startIndex, numItems);
+      renderPreset(sortedData, startIndex, numItems);
     }
   }
-
 }
-
-// NOTE: Must reload decks, needs to be sent updated decks.
-ipcRenderer.on('refresh', function(event) {
-  clear_decks()
-  //populate_decks()
-});
-
-ipcRenderer.on('resultMail', function(event, result) {
-  console.log(result);
-  process_data(result);
-});
 
 const addBtn = document.getElementById('addBtn')
 
 addBtn.addEventListener('click', function(event) {
-  create_add_window()
+  createAddWindow();
 })
 
 function delete_deck(name) {
@@ -249,7 +225,7 @@ function delete_deck(name) {
     if (err) {
       console.log(err.stack)
     } else {
-      clear_decks()
+      clearDecks()
       populate_decks()
     }
   })
@@ -274,7 +250,98 @@ deleter.addEventListener('click', function(event) {
       input.parentNode.removeChild(input)
     }
   }
-})
+});
+
+function addToDatabase(entry) {
+  ipcRenderer.send('update', entry);
+  //ipcRenderer.send('refresh');
+}
+
+// Iterates through all the user given data, and set up an
+// entry for each pair of tab + app, or solo tab/app.
+function setupData(data) {
+  var id = data[0];
+  var name = data[1];
+  var tabs = data[2];
+  var apps = data[3];
+  var entry = [];
+
+  // Loop iterates through all the data, storing it in database.
+  for (i = 0; (i < tabs.length || i < apps.length); i++) {
+    var tab = tabs[i];
+    var app = apps[i];
+
+    // This ensures that at least a single tab or app was entered.
+    if (tab === "" && app === "") {
+      console.log("INVALID INPUT.")
+      break;
+    }
+
+    // The following prepares the value array to be stored depending on app/tab
+    // availability.
+    if (tab === undefined || tab === "") {
+      console.log("Tabs was undefined.");
+      entry = [id, name, tab, app];
+    } else {
+      if (app === undefined || app === "") {
+        console.log("Apps was undefined.");
+        entry = [id, name, tab, app]
+      } else {
+        console.log("We all gucci!")
+        entry = [id, name, tab, app]
+      }
+    }
+
+    addToDatabase(entry);
+  }
+}
+
+// This fuction is responsible for checking if the current data has an ID.
+// If not, the database is queried, and an id is assigned.
+function getNewId(data) {
+    ipcRenderer.send('max');
+
+    ipcRenderer.on('maxVal', (err, maxVal) => {
+      //console.log("The current max value in the database is:");
+      //console.log(maxVal);
+      if (maxVal == null) {
+        data[0] = 1;
+      } else {
+        data[0] = maxVal + 1;
+      }
+      console.log("Entry ID:");
+      console.log(data[0]);
+
+      setupData(data);
+    });
+}
+
+// The data is retrieved with this ipc, and actualy doing something with the
+// data will begin after a id is assigned.
+ipcRenderer.on('name-verified', (err, data) => {
+  // The id is finally assigned.
+  if (data[0] == null) {
+    data[0] = getNewId(data);
+  } else {
+    console.log("Entry ID:");
+    console.log(data[0]);
+    setupData(data);
+  }
+});
+
+// NOTE: Must reload decks, needs to be sent updated decks.
+// ipcRenderer.on('refresh', function(event) {
+//   clearDecks();
+// });
+
+ipcRenderer.on('resultMail', function(event, result) {
+  console.log("The following is the data:");
+  console.log(result);
+  clearDecks();
+  processData(result);
+  ipcRenderer.send('closeAddWindow');
+});
+
 
 // To console.log() a given value from and.js.
 function addjsDebugger() {

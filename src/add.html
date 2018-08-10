@@ -5,6 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../assets/css/add.css">
     <title>Create a Deck</title>
+    <script>
+    function closeWin() {
+      var win = remote.getCurrentWindow();
+      win.close();
+    }
+    </script>
   </head>
   <body>
     <div>
@@ -18,7 +24,7 @@
         </div>
 
         <span class="addy">
-          <a onclick="add_tab()">Additional Tab</a>
+          <a onclick="addTab()">Additional Tab</a>
         </span>
 
         <label for="app"></label>
@@ -27,12 +33,14 @@
         </div>
 
         <span class="addy">
-          <a onclick="add_app()">Additional Application</a>
+          <a onclick="addApp()">Additional Application</a>
         </span>
  <!-- Make this input tag of type="submit" -->
-        <input id="submit" type="submit"  value="Submit">
+        <input onclick="setTimeout(closeWin, 1000)" id="submit" type="submit"  value="Submit">
       </form>
     </div>
-  <script src="./js/add.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js">
+    </script>
+    <script src="./js/add.js"></script>
   </body>
 </html>

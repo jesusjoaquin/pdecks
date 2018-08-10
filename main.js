@@ -9,7 +9,7 @@ var sqlite3 = require('sqlite3').verbose();
 var dbPath = './db/decks.db';
 var db = new sqlite3.Database(dbPath);
 
-db.serialize(function () {
+db.serialize(() => {
   db.run("CREATE TABLE if NOT EXISTS presets (id INTEGER, name TEXT, url TEXT, application TEXT)");
 
   //db.run("INSERT INTO presets VALUES (1, 'deckname1', 'url goes here', 'application goes here')");
@@ -31,9 +31,9 @@ require('electron-context-menu')({
 
   // Keep a global reference of the window object, if you don't, the window will
   // be closed automatically when the JavaScript object is garbage collected.
-let win
+var win;
 
-function createWindow () {
+function createWindow() {
   // Create the browser window.
   win = new BrowserWindow({width: 800, height: 600});
 
@@ -59,7 +59,7 @@ function createWindow () {
   win.on('closed', () => {
     // Dereference the window object, usually you would store windows
     // in an array if your app supports multi windows, this is the time
-    // when you should delete the corresponding element.
+    // when you should devare the corresponding element.
     win = null
   })
 
@@ -87,15 +87,28 @@ app.on('ready', createWindow);
     }
   })
 
+function reloadDecks() {
+  var db = new sqlite3.Database(dbPath);
+
+  db.all("SELECT * FROM presets", function(err, rows) {
+    console.log("The following is being sent to renderer.");
+    console.log(rows);
+    win.webContents.send('refresh');
+    win.webContents.send("resultMail", rows);
+  });
+
+  db.close();
+}
+
 // Contains all of the inter process connections, that must be watched for.
 function ipcWatcher() {
   // ipc check for main window being loaded.
-  ipcMain.on('mainWindow', function () {
+  ipcMain.on('mainWindow', () => {
     var db = new sqlite3.Database(dbPath);
 
     db.all("SELECT * FROM presets", function(err, rows) {
-      //console.log("The following is being sent to renderer.");
-      //console.log(rows);
+      console.log("The following is being sent to renderer.");
+      console.log(rows);
       win.webContents.send("resultMail", rows);
     });
 
@@ -105,7 +118,7 @@ function ipcWatcher() {
   // Finds the largest id value.
   ipcMain.on('max', () => {
     console.log('searching for max');
-    let db = new sqlite3.Database(dbPath);
+    var db = new sqlite3.Database(dbPath);
 
     db.all("SELECT max(id) FROM presets", (err, row) => {
       console.log(row);
@@ -115,32 +128,43 @@ function ipcWatcher() {
     db.close();
   });
 
+  // NOTE: When reload decks is called, new decks are not in database.
   // Updates the database with a newly added deck.
   ipcMain.on('update', function(err, values) {
-    let db = new sqlite3.Database(dbPath);
+    var db = new sqlite3.Database(dbPath);
 
     console.log("This stuff is about to be added:");
     console.log(values);
-    let stmt = db.prepare("INSERT INTO presets (id, name, url, application) VALUES (?, ?, ?, ?)");
+    var stmt = db.prepare("INSERT INTO presets (id, name, url, application) VALUES (?, ?, ?, ?)");
     stmt.run(values);
     stmt.finalize();
 
     db.close();
+
+    reloadDecks();
   });
 
-  ipcMain.on('verify-name', (err, value) => {
-    let db = new sqlite3.Database(dbPath);
+  ipcMain.on('verify-name', function(err, data) {
+    var db = new sqlite3.Database(dbPath);
 
-    let stmt = db.prepare("SELECT * FROM presets WHERE name = (?)");
-    stmt.all(value, (err, row) => {
-      let idStatus;
+    console.log("Here comes the data with name to be verified:");
+    console.log(data);
+
+    var stmt = db.prepare("SELECT * FROM presets WHERE name = (?)");
+    stmt.all(data[1], (err, row) => {
+      var idStatus;
 
       if (row[0] === undefined) {
         idStatus = null;
       } else {
+        console.log('-----found name-----');
+        console.log(row[0]);
         idStatus = row[0].id;
       }
-      win.webContents.send('id-status', idStatus);
+
+      data[0] = idStatus;
+
+      win.webContents.send('name-verified', data);
     });
 
     stmt.finalize();
@@ -149,9 +173,22 @@ function ipcWatcher() {
   });
 
   // Refreshes the listed decks, if code 'refresh' from renderer process.
-  ipcMain.on('refresh', function(event) {
-    win.webContents.send('refresh')
-  });
+  // ipcMain.on('refresh', function(event) {
+  //   var db = new sqlite3.Database(dbPath);
+  //
+  //   db.all("SELECT * FROM presets", function(err, rows) {
+  //     console.log("The following is being sent to renderer.");
+  //     console.log(rows);
+  //     win.webContents.send('refresh');
+  //     win.webContents.send("resultMail", rows);
+  //   });
+  //
+  //   db.close();
+  // });
+
+  // ipcMain.on('closeAddWindow', (event) => {
+  //   win.webContents.send('closeAddWindow');
+  // });
 
   ipcMain.on('addjs-redirect', (err, value) => {
     win.webContents.send('addjs-channel', value);

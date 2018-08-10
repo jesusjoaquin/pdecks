@@ -4,91 +4,63 @@ const remote = electron.remote
 const { Pool, Client } = require('pg')
 const { ipcRenderer } = require('electron')
 
+ipcWatcherAdd();
+
 // Did not work when attempting to edit a deck.
-function add_to_db(values) {
-  ipcRenderer.send('update', values);
+// function add_to_db(values) {
+//   ipcRenderer.send('update', values);
+//
+//   // I do not think I need this ipc.
+//   ipcRenderer.send('refresh');
+//   var window = remote.getCurrentWindow();
+//   window.close();
+// }
 
-  // I do not think I need this ipc.
-  ipcRenderer.send('refresh');
-  let window = remote.getCurrentWindow();
-  window.close();
-}
+function convertTabAppObjectsToArray(data) {
+  var tabArray = new Array();
+  var appArray = new Array();
 
-function setup_data(data) {
-  var id = data[0]
-  var name = data[1].value
-  var tabs = data[2]
-  var apps = data[3]
-  var values = []
-  // Loop iterates through all the data, storing it in database.
-  for (i = 0; (i < tabs.length || i < apps.length); i++) {
-    if (tabs[i] === undefined) {
-      values = [id, name, tabs[i], apps[i].value]
-      add_to_db(values)
-    } else {
-      // Next step is to write add_to_db(values), and set up values array if
-      // tabs[i] exists.
-      if (apps[i] === undefined) {
-        values = [id, name, tabs[i].value, apps[i]]
-      } else {
-        values = [id, name, tabs[i].value, apps[i].value]
-      }
+  var tabs = data[2];
+  var apps = data[3];
 
-      add_to_db(values)
-    }
-
+  for (var i = 0; tabs[i] != undefined; i++) {
+    tabArray.push(tabs[i].value);
   }
 
-}
-
-function getNewId(data) {
-  if (data[0] == null) {
-    ipcRenderer.send('max');
-
-    ipcRenderer.on('maxVal', (err, maxVal) => {
-      if (maxVal == null) {
-        data[0] = 1;
-      } else {
-        data[0] = maxVal + 1;
-      }
-
-      setup_data(data);
-    });
+  for (var i = 0; apps[i] != undefined; i++) {
+    appArray.push(apps[i].value);
   }
-  // pool.query('SELECT max(id) FROM presets', (err, res) => {
-  //   if (err) {
-  //     console.log(err.stack)
-  //   } else {
-  //     data[0] = res.rows[0].max + 1
-  //     setup_data(data)
-  //   }
-  // })
+
+  data[2] = tabArray;
+  data[3] = appArray;
+
+  return data;
 }
 
-const submit = document.getElementById('submit')
+const submit = document.getElementById('submit');
+
 submit.addEventListener('click', function (event) {
-  var deck_name = document.getElementById("dname")
-  var tabs = document.getElementsByClassName("tab")
-  var apps = document.getElementsByClassName("app")
+  // The following retrieves the name the user entered for the deck.
+  // Could potentially be a deck that already exists.
+  var deck_name = document.getElementById("dname").value;
+
+  // The following two lines retrieve an object w/ as many fields as
+  // the user specifies.
+  // Can be accessed through zero-based indexing.
+  var tabs = document.getElementsByClassName("tab");
+  var apps = document.getElementsByClassName("app");
   var data = [0, deck_name, tabs, apps]
 
+  // Just to make life easier, this turns the above objects into arrays,
+  // removing any extra information and just containing the tab/app strings.
+  data = convertTabAppObjectsToArray(data);
 
-  // Check the database for the given name.
-  ipcRenderer.send('verify-name', deck_name.value);
-  verifyValue(deck_name.value);
-  // Returns the result from the check to the database.
-  ipcRenderer.on('id-status', (err, idStatus) => {
-      verifyValue(idStatus);
-      // Assigning the id based on submission.
-      data[0] = idStatus;
-      verifyValue(idStatus);
+  verifyValue(data);
 
-      // Checks for null idStatus and handles accordingly.
-      getNewId(data);
-  });
+  ipcRenderer.send('verify-name', data);
 })
 
-function add_tab() {
+function addTab() {
   // Creating a new input field.
   var new_input = document.createElement("input")
   new_input.type = "text"
@@ -99,7 +71,7 @@ function add_tab() {
   document.getElementById('tabs2open').appendChild(new_input)
 }
 
-function add_app() {
+function addApp() {
   // Creating a new input field.
   var new_input = document.createElement("input")
   new_input.type = "text"
@@ -113,4 +85,16 @@ function add_app() {
 // This function is used to make a value appear in main console.
 function verifyValue(value) {
   ipcRenderer.send('addjs-redirect', value);
+}
+
+function ipcWatcherAdd() {
+  ipcRenderer.on('send-relay', (err, data) => {
+    verifyValue("Mission Success.");
+  });
+
+  // ipcRenderer.on('closeAddWindow', (err) => {
+  //   verifyValue("Attempting to close add window");
+  //   var window = remote.getCurrentWindow();
+  //   window.close();
+  // });
 }
